@@ -1,0 +1,171 @@
+[
+    {
+        "id": "f084b63f.68a7e8",
+        "type": "tab",
+        "label": "Sensor_Arduino_RPI_InfluxDB",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "88b46b6c.4c7778",
+        "type": "serial in",
+        "z": "f084b63f.68a7e8",
+        "name": "Arduino",
+        "serial": "fb170d1d.ac0c4",
+        "x": 90,
+        "y": 120,
+        "wires": [
+            [
+                "8c95d41a.3b8698",
+                "76b44fc2.76f92"
+            ]
+        ]
+    },
+    {
+        "id": "8c95d41a.3b8698",
+        "type": "function",
+        "z": "f084b63f.68a7e8",
+        "name": "Process serial message",
+        "func": "var measurement_description= msg.payload.split(\":\")[0];\nvar measurement_value= msg.payload.split(\":\")[1];\n\nvar output_msg = \n{ \n    \"payload\": {\n         measurement: measurement_description,\n         value: parseFloat(measurement_value)\n                }\n};\nreturn output_msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 270,
+        "y": 160,
+        "wires": [
+            [
+                "ae9d4501.1cb438",
+                "a7eaf77.4468b08"
+            ]
+        ]
+    },
+    {
+        "id": "ed7fff3f.c51b6",
+        "type": "influxdb out",
+        "z": "f084b63f.68a7e8",
+        "influxdb": "d2337a1d.49bfb8",
+        "name": "",
+        "measurement": "temperature",
+        "precision": "",
+        "retentionPolicy": "",
+        "x": 670,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "ae9d4501.1cb438",
+        "type": "switch",
+        "z": "f084b63f.68a7e8",
+        "name": "",
+        "property": "payload.measurement",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "Temperature",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "Humidity",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 450,
+        "y": 260,
+        "wires": [
+            [
+                "ed7fff3f.c51b6",
+                "ac12d456.46a838"
+            ],
+            [
+                "c2a1b0f4.1d1c6",
+                "ac12d456.46a838"
+            ]
+        ]
+    },
+    {
+        "id": "a7eaf77.4468b08",
+        "type": "debug",
+        "z": "f084b63f.68a7e8",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "x": 510,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "c2a1b0f4.1d1c6",
+        "type": "influxdb out",
+        "z": "f084b63f.68a7e8",
+        "influxdb": "d2337a1d.49bfb8",
+        "name": "",
+        "measurement": "humidity",
+        "precision": "",
+        "retentionPolicy": "",
+        "x": 660,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "ac12d456.46a838",
+        "type": "debug",
+        "z": "f084b63f.68a7e8",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "x": 650,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "76b44fc2.76f92",
+        "type": "debug",
+        "z": "f084b63f.68a7e8",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "x": 290,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "fb170d1d.ac0c4",
+        "type": "serial-port",
+        "z": "",
+        "serialport": "/dev/ttyACM0",
+        "serialbaud": "9600",
+        "databits": "8",
+        "parity": "none",
+        "stopbits": "1",
+        "newline": "\\n",
+        "bin": "false",
+        "out": "char",
+        "addchar": false,
+        "responsetimeout": "10000"
+    },
+    {
+        "id": "d2337a1d.49bfb8",
+        "type": "influxdb",
+        "z": "",
+        "hostname": "127.0.0.1",
+        "port": "8086",
+        "protocol": "http",
+        "database": "iot",
+        "name": "",
+        "usetls": false,
+        "tls": ""
+    }
+]
